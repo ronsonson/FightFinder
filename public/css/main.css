@@ -1,0 +1,274 @@
+/*  ===== MOBILE styles (reside at the top and are inherited by all devices) ===== */
+/*  ===== See tablet, desktop, and print @media queries at the bottom. */
+
+
+/*   ----- Imports  -----  */
+  /* @import 'node_modules/modern-normalize/modern-normalize.css';  npm install modern-normalize  Resets elements for browser consistency.  https://www.npmjs.com/package/modern-normalize */         
+  /* @import "component1.css";   Component-specific stylesheets, if any.   */
+  /* @import url(//fonts.googleapis.com/css?family=Font+Name); Add fonts from a hosted services like Google Fonts.   */
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Roboto:wght@300;500&display=swap');
+
+/*   ----- Variables  -----  */
+:root {
+  --Dirt-Brown:#261B14;
+  --Wet-sand: #59463B;
+  --Light-sand: #A6937CDD;
+  --Hazy-Sunset: #F2DCC2;
+  --Ocean-Blue: #5E778CDD;
+  --custom-embellishment-name:;
+}
+
+/*  ----- Viewport ----- elements inherited by all remaining elements ----- */
+body {       /* Can alternatively define in html {}. */
+  background-color:var(--Ocean-Blue);
+
+  background-image:url(images/OregonCoastSunset.jpg);
+  background-repeat:no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: top left;
+  color:var(--Dirt-Brown);
+  
+  font-family: 'Roboto', sans-serif;; /* Define with at least one font name and its related generic family name.*/
+  margin: 10%, 10%, 0%, 0%;
+  padding: 10%;
+  outline: var(--Ocean-Blue);
+  max-width:1500px;
+}
+
+/*  ----- Page layout blocks -----  */
+header {background-color: var(--Ocean-Blue);
+  border: 2px solid var(--Wet-sand);
+  
+}
+main {background-color: var(--Light-sand);
+padding: 2%;
+border: 2px solid var(--Wet-sand);}
+section {}
+article {}
+  #topic1 {}
+  #topic2 {}
+div {}
+aside {}
+footer {background-color: var(--Ocean-Blue);
+  padding: 5%;
+  border: 2px solid var(--Wet-sand);
+}
+
+/* ----- Anchors ----- Text links */
+a {}
+a:link {}
+a:hover {}
+a:active {}
+a:visited {}
+
+/*  ----- Navigation ----- Override text links for navigation only.  */
+nav {
+  background-color: var(--Hazy-Sunset);
+  border: 2px solid var(--Wet-sand);
+  display: flex;
+  
+
+
+}
+nav a 
+{
+  margin: 10px;
+  text-align: center;
+  color: var(--Wet-sand);
+}
+nav a:hover 
+{
+  padding: 4px;
+  background-color: var(--Light-sand);
+  border: 2px solid var(--Dirt-Brown);
+}
+
+.local
+{
+background-color: var(--Ocean-Blue);
+
+}
+
+/*  -----  Typography  ----- */
+p {color:var(--Dirt-Brown)}
+br {}
+ol, ul, dl {}
+li {}
+dt {}
+dd {}
+
+h1, h2, h3, h4, h5, h6 {font-family: 'Oswald', sans-serif;} 
+h1 {}
+h2 {}
+h3 {}
+h4 {}
+h5 {}
+h6 {}
+
+abbr {}
+acronym {}
+address {}
+blockquote {}
+  q {}
+  cite {}
+em {}
+hr {}
+mark {}
+s {}
+span {}
+strong {}
+sub {}
+sup {}
+time {}
+
+/*  ----- Coding or instructional typography ----- */
+pre {}
+code {}
+kbd {}
+samp {}
+var {}
+del {} 
+ins {}
+
+/*  ----- Table ----- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+ 
+  color: var(--Dirt-Brown);
+}
+caption {}
+thead {}
+tbody {
+  }
+tfoot {}
+tr {
+  border:1px solid var(--Wet-sand);
+  
+
+}
+  tr:nth-child(even) {}
+th {padding: 1%}
+td {border:1px solid var(--Wet-sand);
+  
+}
+  td:nth-child(1) {}
+colgroup {}
+data {}
+datalist {}
+
+
+/*  ----- Form ----- */
+form {display:flex;
+  font-family: 'Roboto', sans-serif;;
+color: var(--Dirt-Brown);
+
+
+}
+fieldset {border-color: var(--Wet-sand);
+  margin-top: 3%;
+  padding: 2%;
+  
+
+  
+}
+*:required {
+  border:1px solid rgb(221, 111, 111);
+}
+
+*:focus{border-color:var(--Wet-sand);
+  background-color: rgb(169, 190, 197);
+
+}
+
+::placeholder{color:var(--Dirt-Brown)}
+legend {color: var(--Wet-sand)}
+label {color: var(--Dirt-Brown)}
+button {background-color: var(--Hazy-Sunset);
+  padding: 1%;}
+input {background-color: var(--Hazy-Sunset);
+padding: 1%;}
+select {
+  background-color: var(--Hazy-Sunset);
+  padding: 1%;
+}
+  optgroup {}
+  option {}
+textarea 
+{
+  background-color: var(--Hazy-Sunset);
+  padding: 5%;
+}
+output {}
+meter {}
+progress {}
+
+
+/* ----- Media ----- */
+figure {}
+  figcaption {}
+  figure img {}
+svg {}
+picture {}
+  source {}
+iframe {}
+video {}
+audio {}
+embed {}
+object {}
+
+/*  ----- Classes for alignment, positioning, widths, grids, embellishments, and animation -----  */
+.gallery 
+{
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  padding: 0;
+}
+.gallery figure{
+  width: 320px;
+  margin: 1%;
+  padding: 1%;
+}
+.gallery figcaption
+{
+  display: block;
+  padding: 1% 1% 2% 1%;
+
+}
+.gallery img{
+  width: 100%;
+  margin:0;
+  padding:0;
+}
+.floatright {}
+.floatleft {}
+.center-middle {}
+
+.ten {}
+.twenty {}
+.thirty {}
+.forty {}
+.fifty {}
+.sixty {}
+.seventy {}
+.eighty {}
+
+.radius {}
+.circle {}
+.boxshadow {}
+.tshadow {} 
+.gradient {}
+.shape {}
+
+@keyframes App-logo {}
+
+/*   ===== TABLET  media query overrides mobile styles ===== */
+@media all and (min-width: 600px) {}
+
+/*   ===== DESKTOP  media query overrides mobile and tablet styles ===== */
+@media all and (min-width: 1080px) {}
+
+/*   ===== PRINT  media query overrides previous styles =====  */
+@media print {}

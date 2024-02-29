@@ -1,87 +1,23 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <!-- index.hbs -->
-<h1>The server is running!</h1>
-<p>If you see this text, the server is <strong>definitely</strong> working!</p>
-
-{{!-- Create a table --}}
-<table id = "players-table">
-
-{{!-- Header section --}}
-    <thead>
-
-        {{!-- For just the first row, we print each key of the row object as a header cell so we
-        know what each column means when the page renders --}}
-        <tr>
-            {{#each data.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-            <th>delete</th>
-        </tr>
-    </thead>
-
-    {{!-- Body section --}}
-    <tbody>
-
-        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
-        {{#each data}}
-        <tr data-value={{this.playerID}}>
-            <td>{{this.playerID}}</td>
-            <td>{{this.first_name}}</td>
-            <td>{{this.last_name}}</td>
-            <td>{{this.username}}</td>
+< <main>
+        <section>
+            <h2> Welcome to Fight Finder! </h2>
+            <p>
+                This site is designed to help organize online and in person tournaments for various fighting games.
+                Under the 'Games' tab you can see all games that tournaments can be held for. Under the 'Characters' tab we have a repository
+                of all the characters from recognized games. Under the 'organizers' tab you can view and apply to be a tournament organizer. 
+                The 'players' tab shows all of our registered users that are players and can compete in tournaments. Under the 'tournaments' tab you can see
+                upcoming and recently completed tournaments. 
+            </p>
             
-            <td><button onclick="deletePlayer({{this.playerID}})">Delete</button></td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-<script src="./js/delete_player.js"></script>
-
-<!-- /views/index.hbs -->
-
-{{!-- Form to add a record to the table  --}}
-<h2>Adding Data</h2>
-<p>To add a new player, please enter their information below and click 'Submit'!</p>
-<form id="add-player">
-    <label for="input-fname">First Name: </label>
-    <input type="text" name="input-fname" id="input-fname">
     
-    <label for="input-lname">Last Name: </label>
-    <input type="text" name="input-lname" id="input-lname">
-
-    <label for="input-username">Username: </label>
-    <input type="text" name="input-username" id="input-username">
-
-    <input type="submit">
-</form>
-
-{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
-<script src="./js/add_player.js"></script>
-
-<h2>Updating A Player</h2>
-<p></p>
-<form id="update-person-form-ajax">
-
-    <label for="input-fullname">Full name: </label>
-    <select name="input-fullname" id="mySelect">
-        <option value="test">Select a Person</option>
-        {{#each data}}
-        <option value="{{this.playerID}}">{{this.first_name}} {{this.last_name}}</option>
-        {{/each}}
-    </select>
-
-    <label for="input-homeworld">Homeworld: </label>
-    <select name="input-homeworld" id="input-homeworld-update">
-        <option>Select a Planet</option>
-        {{#each planets}}
-        <option value="{{this.id}}">{{this.name}}</option>
-        {{/each}}
-    </select>
-    <input type="submit">
-
-</form>
-
-<script src="./js/update_person.js"></script>
+                
+        </section>
+    </main>
+    <footer> 
+        <p>
+            
+        </p>
+    </footer>

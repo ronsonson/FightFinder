@@ -24,14 +24,86 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 /*
     ROUTES
 */
-app.get('/', function(req, res)              
+
+app.get('/games', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('games');
+        }
+    });
+app.get('/characters', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('characters');
+        }
+    });
+app.get('/tournaments', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('tournaments');
+        }
+    });
+
+    app.get('/tournamentsRoster', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('tournamentsRoster');
+        }
+    });
+
+    app.get('/playersRoster', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('playersRoster');
+        }
+    });
+
+
+    app.get('/organizers', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('organizers');
+        }
+    });
+
+app.get('/players', function(req, res)              
     {
         // Define our queries
         let query1 = "SELECT * FROM Players;"
         db.pool.query(query1, function (error, rows, fields)
         {
-            res.render('index', {data: rows});
+            res.render('players', {data: rows});
         })
+       
+      
+    });  
+
+app.get('/', function(req, res)              
+    {
+        // Define our queries
+        //let query1 = "SELECT * FROM Players;"
+        //db.pool.query(query1, function (error, rows, fields)
+        {
+            res.render('index');
+        }
        
       
     });                                         
@@ -117,7 +189,40 @@ app.get('/', function(req, res)
       })})}});
 
 
-
+      app.put('/put-player-ajax', function(req,res,next){
+        let data = req.body;
+      
+        let username = parseInt(data.username);
+        let player = parseInt(data.fullname);
+      
+        let queryUpdateWorld = `UPDATE Players SET username = ? WHERE playerID = ?`;
+        let selectWorld = `SELECT * FROM Players WHERE playerID = ?`
+      
+              // Run the 1st query
+              db.pool.query(queryUpdateWorld, [username, player], function(error, rows, fields){
+                  if (error) {
+      
+                  // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                  console.log(error);
+                  res.sendStatus(400);
+                  }
+      
+                  // If there was no error, we run our second query and return that data so we can use it to update the people's
+                  // table on the front-end
+                  else
+                  {
+                      // Run the second query
+                      db.pool.query(selectWorld, [username], function(error, rows, fields) {
+      
+                          if (error) {
+                              console.log(error);
+                              res.sendStatus(400);
+                          } else {
+                              res.send(rows);
+                          }
+                      })
+                  }
+      })});
 /*
     LISTENER
 */

@@ -35,7 +35,18 @@ function deleteRow(playerID){
        //rows would be accessed using the "row" variable assigned in the for loop
        if (table.rows[i].getAttribute("data-value") == playerID) {
             table.deleteRow(i);
+            deleteDropDownMenu(playerID);
             break;
        }
     }
 }
+function deleteDropDownMenu(playerID){
+    let selectMenu = document.getElementById("mySelect");
+    for (let i = 0; i < selectMenu.length; i++){
+      if (Number(selectMenu.options[i].value) === Number(playerID)){
+        selectMenu[i].remove();
+        break;
+      } 
+  
+    }
+  }

@@ -113,12 +113,12 @@ app.get('/', function(req, res)
         let data = req.body;
     
         // Capture NULL values
-    
-    
+        let username = data.username
+        
   
     
         // Create the query and run it on the database
-        query1 = `INSERT INTO Players (first_name, last_name, username) VALUES ('${data.first_name}', '${data.last_name}', ${data.username})`;
+        query1 = `INSERT INTO Players (first_name, last_name, username) VALUES ('${data.first_name}', '${data.last_name}', '${data.username}');`;
         db.pool.query(query1, function(error, rows, fields){
     
             // Check to see if there was an error

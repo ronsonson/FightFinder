@@ -36,22 +36,29 @@ app.get('/games', function(req, res)
     });          
 app.get('/characters', function(req, res)              
     {
-        let query1 = "SELECT * FROM Characters;"
-        let query2 = "SELECT * FROM Games;"
+        let query1 = "SELECT * FROM Characters;";
+        let query2 = "SELECT * FROM Games;";
         db.pool.query(query1, function (error, rows, fields)
         {
             db.pool.query(query2, function (error, gamerows, fields){
-            res.render('characters', {data: rows, gameData: gamerows});
+                res.render('characters', {data: rows, gameData: gamerows});
+            })
         })
-    })});
+    });
 app.get('/tournaments', function(req, res)              
     {
         // Define our queries
-        //let query1 = "SELECT * FROM Players;"
-        //db.pool.query(query1, function (error, rows, fields)
+        let query1 = "SELECT tournament_id, tournament_name, date_of_tournament, is_online, location, prize_pool, Tournament_Organizers.username, Games.game_name FROM Tournaments INNER JOIN Tournament_Organizers ON Tournaments.organizer_id = Tournament_Organizers.organizer_id INNER JOIN Games ON Tournaments.game_id = Games.game_id; ";
+        let query2 = "SELECT * FROM Tournament_Organizers;";
+        let query3 = "SELECT * FROM Games;";
+        db.pool.query(query1, function (error, rows, fields)
         {
-            res.render('tournaments');
-        }
+            db.pool.query(query2, function (error, organizer_rows, fields){
+                db.pool.query(query3, function(error, game_rows, fields){
+                    res.render('tournaments', {data: rows, organizerData: organizer_rows, gameData: game_rows});
+                })
+            })
+        })
     });
 
     app.get('/tournamentsRoster', function(req, res)              
@@ -78,11 +85,11 @@ app.get('/tournaments', function(req, res)
     app.get('/organizers', function(req, res)              
     {
         // Define our queries
-        //let query1 = "SELECT * FROM Players;"
-        //db.pool.query(query1, function (error, rows, fields)
+        let query1 = "SELECT * FROM Tournament_Organizers;"
+        db.pool.query(query1, function (error, rows, fields)
         {
-            res.render('organizers');
-        }
+            res.render('organizers', {data: rows});
+        })
     });
 
 app.get('/players', function(req, res)              
@@ -151,6 +158,35 @@ app.get('/', function(req, res)
             }
         })
     });
+    app.post('/add-tournament', function(req, res)
+    {
+        // Capture the incoming data and parse it back to a JS object
+        let data = req.body
+
+        query1 = `INSERT INTO Tournaments (tournament_name, date_of_tournament, is_online, location, prize_pool, organizer_id, game_id) VALUES ('${data.tournament_name}', '${data.date_of_tournament}', '${data.is_online}', '${data.location}', '${data.prize_pool}', '${data.organizer_id}', '${data.game_id}');`;
+        db.pool.query(query1, function(error, rows, fields)
+        {
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else
+            {
+                query2 = 'SELECT tournament_id, tournament_name, date_of_tournament, is_online, location, prize_pool, Tournament_Organizers.username, Games.game_name FROM Tournaments INNER JOIN Tournament_Organizers ON Tournaments.organizer_id = Tournament_Organizers.organizer_id INNER JOIN Games ON Tournaments.game_id = Games.game_id; ';
+                db.pool.query(query2, function(error, rows, fields)
+                {
+                    if (error) {
+                        console.log(error);
+                        res.sendStatus(400);
+                    }
+                    else
+                    {
+                        res.send(rows)
+                    }
+                })
+            }
+        })
+    })
 
     app.delete('/delete-player', function(req,res,next){
         let data = req.body;
@@ -189,6 +225,32 @@ app.get('/', function(req, res)
                   }
       })})}});
 
+      app.delete('/delete-tournament', function(req, res, next){
+        let data = req.body;
+        let tournamentID = parseInt(data.tournament_id);
+        let deleteTournament = 'DELETE FROM Tournaments WHERE tournament_id = ?';
+        let deletePlayers_in_Tournaments = 'DELETE FROM Players_in_tournaments WHERE tournament_id = ?';
+
+        db.pool.query(deletePlayers_in_Tournaments, [tournamentID], function (error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else
+            {
+                db.pool.query(deleteTournament, [tournamentID], function(error, rows, fields){
+                    if (error) {
+                        console.log(error);
+                        res.sendStatus(400);
+                    }
+                    else
+                    {
+                        res.sendStatus(204);
+                    }
+                })
+            }
+        })
+      });
 
       app.put('/put-player-ajax', function(req,res,next){
         let data = req.body;

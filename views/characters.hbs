@@ -1,115 +1,90 @@
+
+
 <main>
-        <button onClick = "showform('browse');"> Hide forms</button>
-        <button onClick = "showform('all');"> Show forms</button>
-        <div id = 'browse'>
-        <section>
-            <table border = "1">
-                <tr>
-                    <th> <button> <a href = "#" onClick = "showform('insert');"> New </a> </button></th>  
-                    <th> </th>
-                    <th> Character id </th>  
-                    <th> Character Name</th>   
-                    <th> Legal </th>  
-                    <th> Game </th>                    
-                    
-                </tr>
-                <tr>
-                    <th><button> <a href = "#" onClick = "showform('update');"> Edit </a> </button></th>
-                    <th>  <button> <a href = "#" onClick = "showform('delete');"> Delete </a> </button> </th>
-                    <th> 1 </th>
-                    <th> Sol Badguy </th>
-                    <th> Yes </th>
-                    <th> Guilty Gear Strive </th>
-                </tr>
-                <tr>
-                    <th><button> <a href = "#" onClick = "showform('update');"> Edit </a> </button></th>
-                    <th> <button> <a href = "#"  onClick = "showform('delete');"> Delete </a> </button></th>
-                    <th> 2 </th>
-                    <th> Ryu </th>
-                    <th> Yes </th>
-                    <th> Street Fighter 6 </th>
-                </tr>
-                <tr>
-                    <th><button> <a href = "#" onClick = "showform('update');"> Edit </a> </button></th>
-                    <th>  <button> <a href = "#"  onClick = "showform('delete');"> Delete </a> </button> </th>
-                    <th> 3 </th>
-                    <th> Reina </th>
-                    <th> Yes </th>
-                    <th> Tekken 8 </th>
-                </tr>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- index.hbs -->
+<h1>Characters</h1>
+<p>Here you can view, add, update, and remove characters from the database</p>
 
-            </table>
-    
-                
-        </section>
-    </div>
-    <div id = "insert">
-        <section>
-            <form method = "POST" id = "add_char">
-            <fieldset>
-                <legend> Add a character! </legend>
-                <p> 
-                    <label for = "character_name"> Name of character
-                    <input type = "text" name = "character_name" id = "character_name" size = "30" maxlength="100"
-                     required placeholder="Name"  /> 
-                    </label> 
-                    Game they're from
-                    <select id = "game_name" name = "game_name">
-                        <option value = "Street Figter 6"> Street Fighter 6 </option>
-                        <option value = "Tekken 8"> Tekken 8 </option>
-                        <option value = "Guilty Gear Strive"> Guilty Gear Strive </option>
-                    </select>
-                </p>
-                <button type = "submit" > Add! </button>
-            </fieldset>
-        </form>
-        </section>
-    </div>
-    <div id = 'update'>
-        <section>
-            <form method = "POST" id = "edit_char">
-            <fieldset>
-                <legend> Edit a character record </legend>
-                <p> 
-                    <label for = "character_name"> Name of character
-                    <input type = "text" name = "character_name" id = "character_name" size = "30" maxlength="100"
-                     required placeholder="Name"  /> 
-                    </label> 
-                    Game they're from
-                    <select id = "game_name" name = "game_name">
-                        <option value = "Street Figter 6"> Street Fighter 6 </option>
-                        <option value = "Tekken 8"> Tekken 8 </option>
-                        <option value = "Guilty Gear Strive"> Guilty Gear Strive </option>
-                    </select>
-                    Select the ID of the character record you are editing
-                        <select id = "id" name = "id">
-                            <option value = "id_1" > 1 </option>
-                            <option value = "id_2" > 2 </option>
-                            <option value = "id_3" > 3 </option>
-                        </select>
-                </p>
-                <button type = "submit" onClick = "showform('browse');" > save edit </button>
-            </fieldset>
-        </form>
-        </section>
-    </div>
-        <div id = 'delete'>
-        <section> 
-            <form  method = "POST" id = "delete_char">
-           <fieldset>
-            <legend> Are you sure you want to delete this entry? </legend>
-            <button type = "submit" onClick = "showform('browse');"> Yes. Delete </button>
-            <button type = "submit" onClick = "showform('browse');"> No. Cancel </button>
+{{!-- Create a table --}}
+<table id = "characters-table">
 
-           </fieldset>
-        </form>
-        
-        </section>
-        </div>
-   
-    </main>
-    <footer> 
-        <p>
+{{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr data-value={{this.characterID}}>
+            <td>{{this.characterID}}</td>
+            <td>{{this.character_name}}</td>
+            <td>{{this.is_legal}}</td>
+            <td>{{this.gameID}}</td>
             
-        </p>
-    </footer>
+            <td><button onclick="deletePlayer({{this.playerID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_character.js"></script>
+
+<!-- /views/index.hbs -->
+
+{{!-- Form to add a record to the table  --}}
+<h2>Adding Data</h2>
+<p>To add a new character, please enter their information below and click 'Submit'!</p>
+<form id="add-character">
+    <label for="input-character_name">Character Name: </label>
+    <input type="text" name="input-character_name" id="input-character_name">
+    
+    <label for="input-character_legal">Legal to play? 1 for yes, 0 for no </label>
+    <input type="number" name="input-character_legal" id="input-character_legal">
+
+    <select  name="input-character_name" id="mySelect">
+        <option value="test">What game is the character from?</option>
+        {{#each gameData}}
+        <option value="{{this.gameID}}">{{this.game_name}}</option>
+        {{/each}}
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_character.js"></script>
+
+<h2>Updating A Character</h2>
+<p></p>
+<form id="update-character">
+
+    <label for="input-character_name">character name: </label>
+    <select  name="input-character_name" id="mySelect">
+        <option value="test">Select a Character</option>
+        {{#each data}}
+        <option value="{{this.playerID}}">{{this.character_name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-character_legal">Change legality: </label>
+    <input type = "number" name="input-character_legal" id="input-character_legal-update">
+        <option>input a 0 or a 1</option>
+        
+   
+    <input type="submit">
+
+</form>
+
+<script src="./js/update_character.js"></script>
+</main>

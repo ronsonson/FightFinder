@@ -25,24 +25,25 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
     ROUTES
 */
 
-app.get('/games', function(req, res)              
-    {
-        // Define our queries
-        //let query1 = "SELECT * FROM Players;"
-        //db.pool.query(query1, function (error, rows, fields)
-        {
-            res.render('games');
-        }
-    });
+app.get('/games', function(req, res)
+    {  
+        let query1 = "SELECT * FROM Games;";               // Define our query
+
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+
+            res.render('games', {data: rows});                  // Render the index.hbs file, and also send the renderer
+        })                                                      // an object where 'data' is equal to the 'rows' we
+    });          
 app.get('/characters', function(req, res)              
     {
-        // Define our queries
-        //let query1 = "SELECT * FROM Players;"
-        //db.pool.query(query1, function (error, rows, fields)
+        let query1 = "SELECT * FROM Characters;"
+        let query2 = "SELECT * FROM Games;"
+        db.pool.query(query1, function (error, rows, fields)
         {
-            res.render('characters');
-        }
-    });
+            db.pool.query(query2, function (error, gamerows, fields){
+            res.render('characters', {data: rows, gameData: gamerows});
+        })
+    })});
 app.get('/tournaments', function(req, res)              
     {
         // Define our queries
@@ -192,14 +193,14 @@ app.get('/', function(req, res)
       app.put('/put-player-ajax', function(req,res,next){
         let data = req.body;
       
-        let username = parseInt(data.username);
+        //let username = parseInt(data.username);
         let player = parseInt(data.fullname);
       
-        let queryUpdateWorld = `UPDATE Players SET username = ? WHERE playerID = ?`;
-        let selectWorld = `SELECT * FROM Players WHERE playerID = ?`
+        let queryUpdatePlayer = `UPDATE Players SET username = ? WHERE playerID = ?;`
+        let selectPlayer = `SELECT * FROM Players WHERE playerID = ?;`
       
               // Run the 1st query
-              db.pool.query(queryUpdateWorld, [username, player], function(error, rows, fields){
+              db.pool.query(queryUpdatePlayer, [data.username, player], function(error, rows, fields){
                   if (error) {
       
                   // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
@@ -212,7 +213,7 @@ app.get('/', function(req, res)
                   else
                   {
                       // Run the second query
-                      db.pool.query(selectWorld, [username], function(error, rows, fields) {
+                      db.pool.query(selectPlayer, [data.username], function(error, rows, fields) {
       
                           if (error) {
                               console.log(error);
@@ -223,6 +224,86 @@ app.get('/', function(req, res)
                       })
                   }
       })});
+
+
+      app.post('/add-game', function(req, res) 
+      {
+          // Capture the incoming data and parse it back to a JS object
+          let data = req.body;
+      
+          let gameName = data.game_name;
+    
+      
+          // Create the query and run it on the database
+          query1 = `INSERT INTO Games (game_name) VALUES ('${gameName}');`;
+          db.pool.query(query1, function(error, rows, fields){
+      
+              // Check to see if there was an error
+              if (error) {
+      
+                  // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                  console.log(error)
+                  res.sendStatus(400);
+              }
+              else
+              {
+                  // If there was no error, perform a SELECT
+                  query2 = `SELECT * FROM Games;`;
+                  db.pool.query(query2, function(error, rows, fields){
+      
+                      // If there was an error on the second query, send a 400
+                      if (error) {
+                          
+                          // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                          console.log(error);
+                          res.sendStatus(400);
+                      }
+                      // If all went well, send the results of the query back.
+                      else
+                      {
+                          res.send(rows);
+                      }
+                  })
+              }
+          })
+      });
+  
+      app.delete('/delete-game', function(req,res,next){
+          let data = req.body;
+          let gameID = parseInt(data.gameID);
+          let deleteGame_Char = `DELETE FROM Characters_player_plays WHERE gameID = ?`;
+          let deleteGame= `DELETE FROM Games WHERE gameID = ?`;
+          let deleteGame_Tourn = `DELETE FROM Tournaments WHERE gameID = ?`;
+        
+                // Run the 1st query
+                if (!(isNaN(gameID)))
+                {
+                  db.pool.query(deleteGame_Tourn, [gameID], function(error, rows, fields)
+                  {
+                db.pool.query(deleteGame_Char, [gameID], function(error, rows, fields)
+                {
+                    if (error) {
+        
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                    }
+        
+                    else 
+                    
+                    {
+                        // Run the second query
+                        db.pool.query(deleteGame, [gameID], function(error, rows, fields) {
+        
+                            if (error) {
+                                console.log(error);
+                                res.sendStatus(400);
+                            } else {
+                                res.sendStatus(204);
+                            }
+                        })
+                    }
+        })})}});
 /*
     LISTENER
 */

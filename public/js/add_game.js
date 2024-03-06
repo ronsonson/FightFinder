@@ -71,7 +71,7 @@ addRowToTable = (data) => {
     let deleteCell = document.createElement("TD");
 
     // Fill the cells with correct data
-    idCell.innerText = newRow.gameID;
+    idCell.innerText = newRow.game_id;
     gameNameCell.innerText = newRow.game_name;
    
     

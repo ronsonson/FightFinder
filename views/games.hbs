@@ -26,12 +26,12 @@
 
         {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
         {{#each data}}
-        <tr data-value={{this.gameID}}>
-            <td>{{this.gameID}}</td>
+        <tr data-value={{this.game_id}}>
+            <td>{{this.game_id}}</td>
             <td>{{this.game_name}}</td>
             
             
-            <td><button onclick="deleteGame({{this.gameID}})">Delete</button></td>
+            <td><button onclick="deleteGame({{this.game_id}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>

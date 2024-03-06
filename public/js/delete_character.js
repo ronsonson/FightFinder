@@ -1,13 +1,13 @@
-function deleteGame(game_id) {
+function deleteCharacter(character_id) {
     // Put our data we want to send in a javascript object
    
     let data = {
-        game_id: game_id
+        character_id: character_id
     };
 
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/delete-game", true);
+    xhttp.open("DELETE", "/delete-character", true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
     // Tell our AJAX request how to resolve
@@ -15,7 +15,7 @@ function deleteGame(game_id) {
         if (xhttp.readyState == 4 && xhttp.status == 204) {
 
             // Add the new data to the table
-            deleteRow(game_id);
+            deleteRow(character_id);
 
         }
         else if (xhttp.readyState == 4 && xhttp.status != 204) {
@@ -27,14 +27,15 @@ function deleteGame(game_id) {
 }
 
 
-function deleteRow(game_id){
+function deleteRow(character_id){
     
-    let table = document.getElementById("games-table");
+    let table = document.getElementById("characters-table");
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
-       if (table.rows[i].getAttribute("data-value") == game_id) {
+       if (table.rows[i].getAttribute("data-value") == character_id) {
             table.deleteRow(i);
+            deleteDropDownMenu(character_id);
             break;
        }
     }

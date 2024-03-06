@@ -80,11 +80,11 @@ CREATE OR REPLACE TABLE Characters_player_plays
 -- Players and Tournaments intersection Table
 CREATE OR REPLACE TABLE Players_in_tournaments
 (
-    tourname_entry_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    tournament_entry_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
     tournament_id int(11),
     organizer_id int(11),
     player_id int(11),
-    PRIMARY KEY (tourname_entry_id),
+    PRIMARY KEY (tournament_entry_id),
     FOREIGN KEY (tournament_id) REFERENCES Tournaments(tournament_id) ON DELETE CASCADE,
     FOREIGN KEY (organizer_id) REFERENCES Tournament_Organizers(organizer_id) ON DELETE CASCADE,
     FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE

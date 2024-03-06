@@ -36,8 +36,8 @@ app.get('/games', function(req, res)
     });          
 app.get('/characters', function(req, res)              
     {
-        let query1 = "SELECT * FROM Characters;";
-        let query2 = "SELECT * FROM Games;";
+        let query1 = "SELECT character_id, character_name, is_legal, Games.game_name FROM Characters INNER JOIN Games ON Characters.game_id = Games.game_id;"
+        let query2 = "SELECT * FROM Games;"
         db.pool.query(query1, function (error, rows, fields)
         {
             db.pool.query(query2, function (error, gamerows, fields){
@@ -190,17 +190,17 @@ app.get('/', function(req, res)
 
     app.delete('/delete-player', function(req,res,next){
         let data = req.body;
-        let playerID = parseInt(data.playerID);
-        let deletePlayer_Char = `DELETE FROM Characters_player_plays WHERE playerID = ?`;
-        let deletePlayer= `DELETE FROM Players WHERE playerID = ?`;
-        let deletePlayer_Tourn = `DELETE FROM Players_in_tournaments WHERE playerID = ?`;
+        let player_id = parseInt(data.player_id);
+        let deletePlayer_Char = `DELETE FROM Characters_player_plays WHERE player_id = ?`;
+        let deletePlayer= `DELETE FROM Players WHERE player_id = ?`;
+        let deletePlayer_Tourn = `DELETE FROM Players_in_tournaments WHERE player_id = ?`;
       
               // Run the 1st query
-              if (!(isNaN(playerID)))
+              if (!(isNaN(player_id)))
               {
-                db.pool.query(deletePlayer_Tourn, [playerID], function(error, rows, fields)
+                db.pool.query(deletePlayer_Tourn, [player_id], function(error, rows, fields)
                 {
-              db.pool.query(deletePlayer_Char, [playerID], function(error, rows, fields)
+              db.pool.query(deletePlayer_Char, [player_id], function(error, rows, fields)
               {
                   if (error) {
       
@@ -213,7 +213,7 @@ app.get('/', function(req, res)
                   
                   {
                       // Run the second query
-                      db.pool.query(deletePlayer, [playerID], function(error, rows, fields) {
+                      db.pool.query(deletePlayer, [player_id], function(error, rows, fields) {
       
                           if (error) {
                               console.log(error);
@@ -258,8 +258,8 @@ app.get('/', function(req, res)
         //let username = parseInt(data.username);
         let player = parseInt(data.fullname);
       
-        let queryUpdatePlayer = `UPDATE Players SET username = ? WHERE playerID = ?;`
-        let selectPlayer = `SELECT * FROM Players WHERE playerID = ?;`
+        let queryUpdatePlayer = `UPDATE Players SET username = ? WHERE player_id = ?;`
+        let selectPlayer = `SELECT * FROM Players WHERE player_id = ?;`
       
               // Run the 1st query
               db.pool.query(queryUpdatePlayer, [data.username, player], function(error, rows, fields){
@@ -332,17 +332,17 @@ app.get('/', function(req, res)
   
       app.delete('/delete-game', function(req,res,next){
           let data = req.body;
-          let gameID = parseInt(data.gameID);
-          let deleteGame_Char = `DELETE FROM Characters_player_plays WHERE gameID = ?`;
-          let deleteGame= `DELETE FROM Games WHERE gameID = ?`;
-          let deleteGame_Tourn = `DELETE FROM Tournaments WHERE gameID = ?`;
+          let game_id = parseInt(data.game_id);
+          let deleteGame_Char = `DELETE FROM Characters_player_plays WHERE game_id = ?`;
+          let deleteGame= `DELETE FROM Games WHERE game_id = ?`;
+          let deleteGame_Tourn = `DELETE FROM Tournaments WHERE game_id = ?`;
         
                 // Run the 1st query
-                if (!(isNaN(gameID)))
+                if (!(isNaN(game_id)))
                 {
-                  db.pool.query(deleteGame_Tourn, [gameID], function(error, rows, fields)
+                  db.pool.query(deleteGame_Tourn, [game_id], function(error, rows, fields)
                   {
-                db.pool.query(deleteGame_Char, [gameID], function(error, rows, fields)
+                db.pool.query(deleteGame_Char, [game_id], function(error, rows, fields)
                 {
                     if (error) {
         
@@ -355,7 +355,7 @@ app.get('/', function(req, res)
                     
                     {
                         // Run the second query
-                        db.pool.query(deleteGame, [gameID], function(error, rows, fields) {
+                        db.pool.query(deleteGame, [game_id ], function(error, rows, fields) {
         
                             if (error) {
                                 console.log(error);
@@ -366,6 +366,85 @@ app.get('/', function(req, res)
                         })
                     }
         })})}});
+        app.post('/add-character', function(req, res) 
+    {
+        // Capture the incoming data and parse it back to a JS object
+        let data = req.body;
+    
+        // Capture NULL values
+        //let username = data.username
+        
+  
+    
+        // Create the query and run it on the database
+        query1 = `INSERT INTO Characters (character_name, is_legal, game_id) VALUES ('${data.character_name}', '${data.is_legal}', '${data.character_game}');`;
+        db.pool.query(query1, function(error, rows, fields){
+    
+            // Check to see if there was an error
+            if (error) {
+    
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                console.log(error)
+                res.sendStatus(400);
+            }
+            else
+            {
+                // If there was no error, perform a SELECT
+                query2 = `SELECT character_id, character_name, is_legal, Games.game_name FROM Characters INNER JOIN Games ON Characters.game_id = Games.game_id;`;
+                db.pool.query(query2, function(error, rows, fields){
+    
+                    // If there was an error on the second query, send a 400
+                    if (error) {
+                        
+                        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                        console.log(error);
+                        res.sendStatus(400);
+                    }
+                    // If all went well, send the results of the query back.
+                    else
+                    {
+                        res.send(rows);
+                    }
+                })
+            }
+        })
+    });
+    app.delete('/delete-character', function(req,res,next){
+        let data = req.body;
+        let character_id = parseInt(data.character_id);
+        let deletePlayer_Char = `DELETE FROM Characters_player_plays WHERE character_id = ?`;
+        let deleteCharacter= `DELETE FROM Characters WHERE character_id = ?`;
+    
+      
+              // Run the 1st query
+              if (!(isNaN(character_id)))
+              {
+                
+              db.pool.query(deletePlayer_Char, [character_id], function(error, rows, fields)
+              {
+                  if (error) {
+      
+                  // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                  console.log(error);
+                  res.sendStatus(400);
+                  }
+      
+                  else 
+                  
+                  {
+                      // Run the second query
+                      db.pool.query(deleteCharacter, [character_id], function(error, rows, fields) {
+      
+                          if (error) {
+                              console.log(error);
+                              res.sendStatus(400);
+                          } else {
+                              res.sendStatus(204);
+                          }
+                      })
+                  }
+      })}});
+
 /*
     LISTENER
 */

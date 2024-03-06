@@ -29,13 +29,14 @@
 
         {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
         {{#each data}}
-        <tr data-value={{this.characterID}}>
-            <td>{{this.characterID}}</td>
+        <tr data-value={{this.character_id}}>
+            
+            <td>{{this.character_id}}</td>
             <td>{{this.character_name}}</td>
             <td>{{this.is_legal}}</td>
-            <td>{{this.gameID}}</td>
+            <td>{{this.game_name}}</td>
             
-            <td><button onclick="deletePlayer({{this.playerID}})">Delete</button></td>
+            <td><button onclick="deleteCharacter({{this.character_id}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>
@@ -54,10 +55,10 @@
     <label for="input-character_legal">Legal to play? 1 for yes, 0 for no </label>
     <input type="number" name="input-character_legal" id="input-character_legal">
 
-    <select  name="input-character_name" id="mySelect">
+    <select  name="input-character_game" id="input-character_game">
         <option value="test">What game is the character from?</option>
         {{#each gameData}}
-        <option value="{{this.gameID}}">{{this.game_name}}</option>
+        <option value="{{this.game_id}}">{{this.game_name}}</option>
         {{/each}}
     <input type="submit">
 </form>
@@ -73,7 +74,7 @@
     <select  name="input-character_name" id="mySelect">
         <option value="test">Select a Character</option>
         {{#each data}}
-        <option value="{{this.playerID}}">{{this.character_name}}</option>
+        <option value="{{this.character_id}}">{{this.character_name}}</option>
         {{/each}}
     </select>
 

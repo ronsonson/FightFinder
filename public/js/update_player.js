@@ -55,7 +55,7 @@ updatePlayerForm.addEventListener("submit", function (e) {
 })
 
 
-function updateRow(data, playerID){
+function updateRow(data, player_id){
     let parsedData = JSON.parse(data);
     
     let table = document.getElementById("player-table");
@@ -63,7 +63,7 @@ function updateRow(data, playerID){
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
-       if (table.rows[i].getAttribute("data-value") == playerID) {
+       if (table.rows[i].getAttribute("data-value") == player_id) {
 
             // Get the location of the row where we found the matching person ID
             let updateRowIndex = table.getElementsByTagName("tr")[i];

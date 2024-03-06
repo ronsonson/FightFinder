@@ -1,82 +1,98 @@
 /*
-    Project Group 84 Step 2 SQL Data Definition Queries
+    Project Group 84 Step 4 SQL Data Definition Queries
     Group Members: Ross Hoelscher and Ronson Imfeld
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
 
+-- SQL Definitions for tables for Fight Finder
 
+-- Tournament Organizers Table
 CREATE OR REPLACE TABLE Tournament_Organizers(
-    organizerID int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    organizer_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
     first_name varchar(45) NOT NULL,
     last_name varchar(45) NOT NULL,
     username varchar(45) NOT NULL,
-    PRIMARY KEY(organizerID)
+    PRIMARY KEY(organizer_id)
 );
 
+-- Players Table
 CREATE OR REPLACE TABLE Players
 (
-    playerID int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    player_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
     first_name varchar(45) NOT NULL,
     last_name varchar(45) NOT NULL,
     username varchar(45) NOT NULL,
-    PRIMARY KEY(playerID)
+    PRIMARY KEY(player_id)
 );
 
+-- Tournaments Table
 CREATE OR REPLACE TABLE Tournaments
 (
-    tournamentID int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    tournament_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
     date_of_tournament date NOT NULL,
+    tournament_name varchar(45) NOT NULL,
     is_online tinyint(1) NOT NULL,
     location varchar(45) NOT NULL,
     prize_pool varchar(45) NOT NULL,
-    organizerID int(11) NOT NULL,
-    gameID int(11) NOT NULL,
-    FOREIGN KEY (organizerID) REFERENCES Tournament_Organizers(organizerID),
-    FOREIGN KEY (gameID) REFERENCES Games(gameID),
-    PRIMARY KEY(tournamentID)
+    organizer_id int(11),
+    game_id int(11) NOT NULL,
+    FOREIGN KEY (organizer_id) REFERENCES Tournament_Organizers(organizer_id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES Games(game_id) ON DELETE CASCADE,
+    PRIMARY KEY(tournament_id)
 );
 
+-- Games Table
 CREATE OR REPLACE TABLE Games
 (
-    gameID int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    game_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
     game_name varchar(45) NOT NULL,
-    PRIMARY KEY(gameID)
+    PRIMARY KEY(game_id)
 );
 
+--Characters Table
 CREATE OR REPLACE TABLE Characters
 (
     character_name varchar(45) NOT NULL,
-    characterID int(11) AUTO_INCREMENT UNIQUE NOT NULL, 
+    character_id int(11) AUTO_INCREMENT UNIQUE NOT NULL, 
     is_legal tinyint(1) NOT NULL,
-    gameID int(11) NOT NULL,
-    PRIMARY KEY(characterID),
-    FOREIGN KEY(gameID) REFERENCES Games(gameID)
+    game_id int(11) NOT NULL,
+    PRIMARY KEY(character_id),
+    FOREIGN KEY(game_id) REFERENCES Games(game_id) ON DELETE CASCADE
 );
 
+-- Characters and Players intersection Table
 CREATE OR REPLACE TABLE Characters_player_plays
 (
-    playerID int(11),
-    characterID int(11),
-    gameID int(11),
-    FOREIGN KEY(playerID) REFERENCES Players(playerID),
-    FOREIGN KEY (characterID) REFERENCES Characters(characterID),
-    FOREIGN KEY (gameID) REFERENCES Games(gameID)
+    character_player_plays_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    player_id int(11),
+    character_id int(11),
+    game_id int(11),
+    PRIMARY KEY (character_player_plays_id),
+    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE,
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES Games(game_id) ON DELETE CASCADE
 
 
 );
 
+-- Players and Tournaments intersection Table
 CREATE OR REPLACE TABLE Players_in_tournaments
 (
-    tournamentID int(11),
-    organizerID int(11),
-    playerID int(11),
-    FOREIGN KEY (tournamentID) REFERENCES Tournaments(tournamentID),
-    FOREIGN KEY (organizerID) REFERENCES Tournament_Organizers(organizerID),
-    FOREIGN KEY (playerID) REFERENCES Players(playerID)
+    tournament_entry_id int(11) AUTO_INCREMENT UNIQUE NOT NULL,
+    tournament_id int(11),
+    organizer_id int(11),
+    player_id int(11),
+    PRIMARY KEY (tournament_entry_id),
+    FOREIGN KEY (tournament_id) REFERENCES Tournaments(tournament_id) ON DELETE CASCADE,
+    FOREIGN KEY (organizer_id) REFERENCES Tournament_Organizers(organizer_id) ON DELETE CASCADE,
+    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE
 );
 
+-- Inserting sample data into database
+
+-- Tournament Organizers Sample Data
 INSERT INTO Tournament_Organizers(
     first_name,
     last_name,
@@ -108,6 +124,7 @@ VALUES(
     "mp5000"
 );
 
+-- Players Sample Data
 INSERT INTO Players(
     first_name,
     last_name,
@@ -139,16 +156,19 @@ VALUES(
     "Daru"
 );
 
+-- Tournaments Sample Data
 INSERT INTO Tournaments(
     date_of_tournament,
+    tournament_name,
     is_online,
     prize_pool,
-    organizerID,
+    organizer_id,
     location,
-    gameID
+    game_id
 )
 VALUES(
     '2024-02-07',
+    'WNF 12',
     0,
     "5000",
     2,
@@ -157,6 +177,7 @@ VALUES(
 ),
 (
     '2023-12-10',
+    'CEO 2023',
     0,
     "10000",
     3,
@@ -165,6 +186,7 @@ VALUES(
 ),
 (
     '2020-07-03',
+    'Coinbox Online',
     1,
     "10000",
     1,
@@ -173,6 +195,7 @@ VALUES(
 ),
 (
     '2023-08-04',
+    'Evo 2023',
     0,
     "100000",
     4,
@@ -181,6 +204,7 @@ VALUES(
 ),
 (
     '2024-01-17',
+    'WNF 9',
     1,
     "2500",
     1,
@@ -188,6 +212,7 @@ VALUES(
     3
 );
 
+-- Games Sample Data
 INSERT INTO Games(
     game_name
 )
@@ -207,10 +232,11 @@ VALUES(
     "Granblue Fantasy Versus: Rising"
 );
 
+-- Characters Sample Data
 INSERT INTO Characters(
     character_name,
     is_legal,
-    gameID
+    game_id
 )
 VALUES(
     "Sol Badguy",
@@ -238,10 +264,11 @@ VALUES(
     1
 );
 
+-- Characters and Players Intersection Table Sample Data
 INSERT INTO Characters_player_plays(
-    playerID,
-    characterID,
-    gameID
+    player_id,
+    character_id,
+    game_id
 )
 VALUES(
     1,
@@ -269,10 +296,11 @@ VALUES(
     3
 );
 
+-- Players and Tournaments Intersection Table Sample Data
 INSERT INTO Players_in_tournaments(
-    tournamentID,
-    organizerID,
-    playerID
+    tournament_id,
+    organizer_id,
+    player_id
 )
 VALUES(
     4,
@@ -299,6 +327,8 @@ VALUES(
     1,
     5
 );
+
+
 
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;

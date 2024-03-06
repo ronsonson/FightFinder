@@ -29,13 +29,13 @@
 
         {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
         {{#each data}}
-        <tr data-value={{this.playerID}}>
-            <td>{{this.playerID}}</td>
+        <tr data-value={{this.player_id}}>
+            <td>{{this.player_id}}</td>
             <td>{{this.first_name}}</td>
             <td>{{this.last_name}}</td>
             <td>{{this.username}}</td>
             
-            <td><button onclick="deletePlayer({{this.playerID}})">Delete</button></td>
+            <td><button onclick="deletePlayer({{this.player_id}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>
@@ -71,7 +71,7 @@
     <select  name="input-fullname" id="mySelect">
         <option value="test">Select a Player</option>
         {{#each data}}
-        <option value="{{this.playerID}}">{{this.first_name}} {{this.last_name}}</option>
+        <option value="{{this.player_id}}">{{this.first_name}} {{this.last_name}}</option>
         {{/each}}
     </select>
 

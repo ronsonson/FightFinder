@@ -38,4 +38,24 @@
     </tbody>
 </table>
 <script src="./js/delete_organizer.js"></script>
+
+{{!-- Form to add a record to the table  --}}
+<h2>Adding Data</h2>
+<p>To add a new player, please enter their information below and click 'Submit'!</p>
+<form id="add-organizer">
+    <label for="input-fname">First Name: </label>
+    <input type="text" name="input-fname" id="input-fname">
+    
+    <label for="input-lname">Last Name: </label>
+    <input type="text" name="input-lname" id="input-lname">
+
+    <label for="input-username">Username: </label>
+    <input type="text" name="input-username" id="input-username">
+
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_organizer.js"></script>
+
 </main>

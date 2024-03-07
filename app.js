@@ -74,18 +74,28 @@ app.get('/tournaments', function(req, res)
     app.get('/playersRoster', function(req, res)              
     {
         // Define our queries
-        //let query1 = "SELECT * FROM Players;"
-        //db.pool.query(query1, function (error, rows, fields)
+        let query1 = "SELECT character_player_plays_id, Players.username, Characters.character_name, Games.game_name FROM Characters_player_plays INNER JOIN Players ON Characters_player_plays.player_id = Players.player_id INNER JOIN Characters ON Characters_player_plays.character_id = Characters.character_id INNER JOIN Games ON Characters_player_plays.game_id = Games.game_id;"
+        let query2 = "SELECT * FROM Players";
+        let query3 = "SELECT * FROM Characters;";
+        let query4 = "SELECT * FROM Games;";
+        db.pool.query(query1, function (error, rows, fields)
         {
-            res.render('playersRoster');
-        }
+            db.pool.query(query2, function(error, player_rows, fields){
+                db.pool.query(query3, function(error, character_rows, fields){
+                    db.pool.query(query4, function(error, game_rows, fields){
+                        res.render('playersRoster', {data: rows, playerData: player_rows, characterData: character_rows, gameData: game_rows});
+                    })
+                })
+            })
+
+        })
     });
 
 
     app.get('/organizers', function(req, res)              
     {
         // Define our queries
-        let query1 = "SELECT * FROM Tournament_Organizers;"
+        let query1 = "SELECT organizer_id, first_name, last_name, username FROM Tournament_Organizers;"
         db.pool.query(query1, function (error, rows, fields)
         {
             res.render('organizers', {data: rows});
@@ -126,7 +136,7 @@ app.get('/', function(req, res)
   
     
         // Create the query and run it on the database
-        query1 = `INSERT INTO Players (first_name, last_name, username) VALUES ('${data.first_name}', '${data.last_name}', '${data.username}');`;
+        let query1 = `INSERT INTO Players (first_name, last_name, username) VALUES ('${data.first_name}', '${data.last_name}', '${data.username}');`;
         db.pool.query(query1, function(error, rows, fields){
     
             // Check to see if there was an error
@@ -139,7 +149,7 @@ app.get('/', function(req, res)
             else
             {
                 // If there was no error, perform a SELECT
-                query2 = `SELECT * FROM Players;`;
+                let query2 = `SELECT * FROM Players;`;
                 db.pool.query(query2, function(error, rows, fields){
     
                     // If there was an error on the second query, send a 400
@@ -163,7 +173,7 @@ app.get('/', function(req, res)
         // Capture the incoming data and parse it back to a JS object
         let data = req.body
 
-        query1 = `INSERT INTO Tournaments (tournament_name, date_of_tournament, is_online, location, prize_pool, organizer_id, game_id) VALUES ('${data.tournament_name}', '${data.date_of_tournament}', '${data.is_online}', '${data.location}', '${data.prize_pool}', '${data.organizer_id}', '${data.game_id}');`;
+        let query1 = `INSERT INTO Tournaments (tournament_name, date_of_tournament, is_online, location, prize_pool, organizer_id, game_id) VALUES ('${data.tournament_name}', '${data.date_of_tournament}', '${data.is_online}', '${data.location}', '${data.prize_pool}', '${data.organizer_id}', '${data.game_id}');`;
         db.pool.query(query1, function(error, rows, fields)
         {
             if (error) {
@@ -172,7 +182,7 @@ app.get('/', function(req, res)
             }
             else
             {
-                query2 = 'SELECT tournament_id, tournament_name, date_of_tournament, is_online, location, prize_pool, Tournament_Organizers.username, Games.game_name FROM Tournaments INNER JOIN Tournament_Organizers ON Tournaments.organizer_id = Tournament_Organizers.organizer_id INNER JOIN Games ON Tournaments.game_id = Games.game_id; ';
+                let query2 = 'SELECT tournament_id, tournament_name, date_of_tournament, is_online, location, prize_pool, Tournament_Organizers.username, Games.game_name FROM Tournaments INNER JOIN Tournament_Organizers ON Tournaments.organizer_id = Tournament_Organizers.organizer_id INNER JOIN Games ON Tournaments.game_id = Games.game_id; ';
                 db.pool.query(query2, function(error, rows, fields)
                 {
                     if (error) {
@@ -186,8 +196,61 @@ app.get('/', function(req, res)
                 })
             }
         })
-    })
+    });
+app.post('/add-organizer', function(req, res)
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body
 
+    let query1 = `INSERT INTO Tournament_Organizers (first_name, last_name, username) VALUES ('${data.first_name}', '${data.last_name}', '${data.username}');`;
+    db.pool.query(query1, function(error, rows, fields)
+    {
+        if (error){
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else{
+            let query2 = 'SELECT organizer_id, first_name, last_name, username FROM Tournament_Organizers;';
+            db.pool.query(query2, function(error, rows, fields)
+            {
+                if (error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else{
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
+app.post('/add-player-roster', function(req, res)
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body
+
+    let query1 = `INSERT INTO Characters_player_plays (player_id, character_id, game_id) VALUES ('${data.player_id}', '${data.character_id}', '${data.game_id}');`;
+    db.pool.query(query1, function(error, rows, fields)
+    {
+        if (error){
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else{
+            let query2 = "SELECT character_player_plays_id, Players.username, Characters.character_name, Games.game_name FROM Characters_player_plays INNER JOIN Players ON Characters_player_plays.player_id = Players.player_id INNER JOIN Characters ON Characters_player_plays.character_id = Characters.character_id INNER JOIN Games ON Characters_player_plays.game_id = Games.game_id;";
+            db.pool.query(query2, function(error, rows, fields)
+            {
+                if (error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else{
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
     app.delete('/delete-player', function(req,res,next){
         let data = req.body;
         let player_id = parseInt(data.player_id);
@@ -224,6 +287,40 @@ app.get('/', function(req, res)
                       })
                   }
       })})}});
+
+      app.delete('/delete-organizer', function(req, res, next){
+        let data = req.body;
+        let organizer_id = parseInt(data.organizer_id);
+        let deleteOrganizer = `DELETE FROM Tournament_Organizers WHERE organizer_id = ?`
+
+        db.pool.query(deleteOrganizer, [organizer_id], function(error, rows, fields)
+        {
+            if (error){
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else{
+                res.sendStatus(204);
+            }
+        })
+      });
+
+      app.delete('/delete-player-roster', function(req, res, next){
+        let data = req.body;
+        let character_player_plays_id = parseInt(data.character_player_plays_id);
+        let deletePlayerRoster = `DELETE FROM Characters_player_plays WHERE character_player_plays_id = ?`
+
+        db.pool.query(deletePlayerRoster, [character_player_plays_id], function(error, rows, fields)
+        {
+            if (error){
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else{
+                res.sendStatus(204);
+            }
+        })
+      });
 
       app.delete('/delete-tournament', function(req, res, next){
         let data = req.body;

@@ -1,13 +1,13 @@
-function deleteOrganizer(organizer_id) {
+function deletePlayerRoster(character_player_plays_id) {
     // Put our data we want to send in a javascript object
    
     let data = {
-        organizer_id: organizer_id
+        character_player_plays_id: character_player_plays_id
     };
 
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/delete-organizer", true);
+    xhttp.open("DELETE", "/delete-player-roster", true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
     // Tell our AJAX request how to resolve
@@ -15,7 +15,7 @@ function deleteOrganizer(organizer_id) {
         if (xhttp.readyState == 4 && xhttp.status == 204) {
 
             // Add the new data to the table
-            deleteRow(organizer_id);
+            deleteRow(character_player_plays_id);
 
         }
         else if (xhttp.readyState == 4 && xhttp.status != 204) {
@@ -27,14 +27,15 @@ function deleteOrganizer(organizer_id) {
 }
 
 
-function deleteRow(organizer_id){
+function deleteRow(character_player_plays_id){
     
-    let table = document.getElementById("organizers-table");
+    let table = document.getElementById("player-roster-table");
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
-       if (table.rows[i].getAttribute("data-value") == organizer_id) {
+       if (table.rows[i].getAttribute("data-value") == character_player_plays_id) {
             table.deleteRow(i);
+            deleteDropDownMenu(character_player_plays_id);
             break;
        }
     }

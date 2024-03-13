@@ -28,6 +28,7 @@
         {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
         {{#each data}}
         <tr data-value={{this.organizer_id}}>
+            <td>{{this.organizer_id}}</td>
             <td>{{this.first_name}}</td>
             <td>{{this.last_name}}</td>
             <td>{{this.username}}</td>
@@ -57,5 +58,28 @@
 
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="./js/add_organizer.js"></script>
+
+<h2>Updating an Organizer</h2>
+<p></p>
+<form id="update-organizer">
+
+    <label for="input-fullname">Full name: </label>
+    <select  name="input-fullname" id="mySelect">
+        <option value="test">Select an Organizer</option>
+        {{#each data}}
+        <option value="{{this.organizer_id}}">{{this.first_name}} {{this.last_name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-username">Username: </label>
+    <input type="text" name="input-username" id="input-username-update">
+        <option>Input a username</option>
+        
+   
+    <input type="submit">
+
+</form>
+
+<script src="./js/update_organizer.js"></script>
 
 </main>

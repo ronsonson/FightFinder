@@ -384,6 +384,36 @@ app.post('/add-player-roster', function(req, res)
                   }
       })});
 
+      app.put('/put-organizer-ajax', function(req, res, next){
+        let data = req.body;
+
+        let username = data.username;
+        let organizer_id = data.organizer_id;
+
+        let queryUpdateUsername = `UPDATE Tournament_Organizers SET username = ? WHERE organizer_id = ?;`;
+        let selectOrganizer = `SELECT * FROM Tournament_Organizers WHERE organizer_id = ?;`;
+
+        db.pool.query(queryUpdateUsername, [username, organizer_id], function(error, rows, fields){
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            if(error){
+                console.log(error);
+                res.sendStatus(400);
+            }
+            // If there was no error, we run our second query and return that data so we can use it to update the people's
+            // table on the front-end
+            else
+            {
+                db.pool.query(selectOrganizer, [organizer_id], function(error, rows, fields){
+                    if (error) {
+                        console.log(error);
+                        res.sendStatus(400);
+                    } else {
+                        res.send(rows);
+                    }
+                })
+            }
+        })});
+
 
       app.post('/add-game', function(req, res) 
       {

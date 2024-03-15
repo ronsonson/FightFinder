@@ -372,7 +372,7 @@ app.post('/add-player-roster', function(req, res)
                   else
                   {
                       // Run the second query
-                      db.pool.query(selectPlayer, [data.username], function(error, rows, fields) {
+                      db.pool.query(selectPlayer, [player], function(error, rows, fields) {
       
                           if (error) {
                               console.log(error);
@@ -415,6 +415,65 @@ app.post('/add-player-roster', function(req, res)
         })});
 
 
+        app.put('/put-game-ajax', function(req, res, next){
+            let data = req.body;
+    
+            let gameName = data.gameName;
+            let game_id = data.game_id;
+    
+            let queryUpdateGameName = `UPDATE Games SET game_name = ? WHERE game_id = ?;`;
+            let selectGame = `SELECT * FROM Games WHERE game_id = ?;`;
+    
+            db.pool.query(queryUpdateGameName, [gameName, game_id], function(error, rows, fields){
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                if(error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If there was no error, we run our second query and return that data so we can use it to update the people's
+                // table on the front-end
+                else
+                {
+                    db.pool.query(selectGame, [game_id], function(error, rows, fields){
+                        if (error) {
+                            console.log(error);
+                            res.sendStatus(400);
+                        } else {
+                            res.send(rows);
+                        }
+                    })
+                }
+            })});
+
+            app.put('/put-character-ajax', function(req, res, next){
+                let data = req.body;
+        
+                let legal = data.is_legal;
+                let character_id = data.character_id;
+        
+                let queryUpdateCharacter = `UPDATE Characters SET is_legal = ? WHERE character_id = ?;`;
+                let selectCharacter = `SELECT * FROM Characters WHERE character_id = ?;`;
+        
+                db.pool.query(queryUpdateCharacter, [legal, character_id], function(error, rows, fields){
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    if(error){
+                        console.log(error);
+                        res.sendStatus(400);
+                    }
+                    // If there was no error, we run our second query and return that data so we can use it to update the people's
+                    // table on the front-end
+                    else
+                    {
+                        db.pool.query(selectCharacter, [character_id], function(error, rows, fields){
+                            if (error) {
+                                console.log(error);
+                                res.sendStatus(400);
+                            } else {
+                                res.send(rows);
+                            }
+                        })
+                    }
+                })});
       app.post('/add-game', function(req, res) 
       {
           // Capture the incoming data and parse it back to a JS object

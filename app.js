@@ -64,11 +64,24 @@ app.get('/tournaments', function(req, res)
     app.get('/tournamentsRoster', function(req, res)              
     {
         // Define our queries
-        //let query1 = "SELECT * FROM Players;"
-        //db.pool.query(query1, function (error, rows, fields)
+        let query1 = `SELECT tournament_entry_id, tournament_name, Tournament_Organizers.username AS organizer_name, Players.username FROM Players_in_tournaments 
+                            INNER JOIN Tournaments ON Players_in_tournaments.tournament_id = Tournaments.tournament_id 
+                            INNER JOIN Tournament_Organizers ON Players_in_tournaments.organizer_id = Tournament_Organizers.organizer_id 
+                            INNER JOIN Players ON Players_in_tournaments.player_id = Players.player_id;`;
+        let query2 = "SELECT * FROM Tournaments";
+        let query3 = "SELECT * FROM Tournament_Organizers;";
+        let query4 = "SELECT * FROM Players;";
+        db.pool.query(query1, function (error, rows, fields)
         {
-            res.render('tournamentsRoster');
-        }
+            db.pool.query(query2, function(error, tournament_rows, fields){
+                db.pool.query(query3, function(error, organizer_rows, fields){
+                    db.pool.query(query4, function(error, player_rows, fields){
+                        res.render('tournamentsRoster', {data: rows, tournamentData: tournament_rows, organizerData: organizer_rows, playerData: player_rows});
+                    })
+                })
+            })
+
+        })
     });
 
     app.get('/playersRoster', function(req, res)              
@@ -251,6 +264,37 @@ app.post('/add-player-roster', function(req, res)
         }
     })
 });
+
+app.post('/add-tournament-roster', function(req, res)
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body
+
+    let query1 = `INSERT INTO Players_in_tournaments (tournament_id, organizer_id, player_id) VALUES ('${data.tournament_id}', '${data.organizer_id}', '${data.player_id}');`;
+    db.pool.query(query1, function(error, rows, fields)
+    {
+        if (error){
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else{
+            let query2 = `SELECT tournament_entry_id, tournament_name, Tournament_Organizers.username AS organizer_name, Players.username FROM Players_in_tournaments 
+            INNER JOIN Tournaments ON Players_in_tournaments.tournament_id = Tournaments.tournament_id 
+            INNER JOIN Tournament_Organizers ON Players_in_tournaments.organizer_id = Tournament_Organizers.organizer_id 
+            INNER JOIN Players ON Players_in_tournaments.player_id = Players.player_id;`;
+            db.pool.query(query2, function(error, rows, fields)
+            {
+                if (error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else{
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
     app.delete('/delete-player', function(req,res,next){
         let data = req.body;
         let player_id = parseInt(data.player_id);
@@ -311,6 +355,23 @@ app.post('/add-player-roster', function(req, res)
         let deletePlayerRoster = `DELETE FROM Characters_player_plays WHERE character_player_plays_id = ?`
 
         db.pool.query(deletePlayerRoster, [character_player_plays_id], function(error, rows, fields)
+        {
+            if (error){
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else{
+                res.sendStatus(204);
+            }
+        })
+      });
+
+      app.delete('/delete-tournament-roster', function(req, res, next){
+        let data = req.body;
+        let tournament_entry_id = parseInt(data.tournament_entry_id);
+        let deleteTournamentRoster = `DELETE FROM Players_in_tournaments WHERE tournament_entry_id = ?`
+
+        db.pool.query(deleteTournamentRoster, [tournament_entry_id], function(error, rows, fields)
         {
             if (error){
                 console.log(error);
@@ -413,6 +474,44 @@ app.post('/add-player-roster', function(req, res)
                 })
             }
         })});
+
+        app.put('/put-tournament-ajax', function(req, res, next){
+            let data = req.body;
+    
+            let tournament_id = data.tournament_id;
+            let date_of_tournament = data.date_of_tournament;
+            let is_online = data.is_online;
+            let location = data.location;
+            let prize_pool = data.prize_pool;
+            let organizer_id = data.organizer_id;
+            let game_id = data.game_id;
+    
+            let queryUpdateTournament = `UPDATE Tournaments SET date_of_tournament = ?, is_online = ?, location = ?, prize_pool = ?, organizer_id = ?, game_id = ? WHERE tournament_id = ?`;
+            let selectTournament = `SELECT tournament_id, tournament_name, date_of_tournament, is_online, location, prize_pool, username, game_name FROM Tournaments 
+                                            INNER JOIN Tournament_Organizers ON Tournaments.organizer_id = Tournament_Organizers.organizer_id
+                                            INNER JOIN Games ON Tournaments.game_id = Games.game_id
+                                        WHERE tournament_id = ?;`;
+    
+            db.pool.query(queryUpdateTournament, [date_of_tournament, is_online, location, prize_pool, organizer_id, game_id, tournament_id], function(error, rows, fields){
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                if(error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If there was no error, we run our second query and return that data so we can use it to update the people's
+                // table on the front-end
+                else
+                {
+                    db.pool.query(selectTournament, [tournament_id], function(error, rows, fields){
+                        if (error) {
+                            console.log(error);
+                            res.sendStatus(400);
+                        } else {
+                            res.send(rows);
+                        }
+                    })
+                }
+            })});
 
         app.put('/put-player-roster-ajax', function(req, res, next){
             let data = req.body;

@@ -87,7 +87,7 @@ addRowToTable = (data) => {
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";
     deleteCell.onclick = function(){
-        deleteOrganizer(newRow.id);
+        deleteOrganizer(newRow.organizer_id);
     };
 
     // Add the cells to the row 
@@ -97,7 +97,7 @@ addRowToTable = (data) => {
     row.appendChild(usernameCell);
     row.appendChild(deleteCell);
     
-    row.setAttribute('data-value', newRow.id);
+    row.setAttribute('data-value', newRow.organizer_id);
     // Add the row to the table
     currentTable.appendChild(row);
 

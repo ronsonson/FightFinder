@@ -1,36 +1,36 @@
 // Get the objects we need to modify
-let addPlayerRosterForm = document.getElementById('add-player-roster');
+let addTournamentRosterForm = document.getElementById('add-tournament-roster');
 
 // Modify the objects we need
-addPlayerRosterForm.addEventListener("submit", function (e) {
+addTournamentRosterForm.addEventListener("submit", function (e) {
     
     // Prevent the form from submitting
     e.preventDefault();
 
     // Get form fields we need to get data from
+    let inputTournamentID = document.getElementById("input-tournament-ajax");
+    let inputOrganizerID = document.getElementById("input-organizer-ajax");
     let inputPlayerID = document.getElementById("input-player-ajax");
-    let inputCharacterID = document.getElementById("input-character-ajax");
-    let inputGameID = document.getElementById("input-game-ajax");
 
     
 
     // Get the values from the form fields
+    let tournamentIDValue = inputTournamentID.value;
+    let organizerIDValue = inputOrganizerID.value;
     let playerIDValue = inputPlayerID.value;
-    let characterIDValue = inputCharacterID.value;
-    let gameIDValue = inputGameID.value;
 
     
 
     // Put our data we want to send in a javascript object
     let data = {
-        player_id: playerIDValue,
-        character_id: characterIDValue,
-        game_id: gameIDValue    
+        tournament_id: tournamentIDValue,
+        organizer_id: organizerIDValue,
+        player_id: playerIDValue    
     }
     
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/add-player-roster", true);
+    xhttp.open("POST", "/add-tournament-roster", true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
     // Tell our AJAX request how to resolve
@@ -41,9 +41,9 @@ addPlayerRosterForm.addEventListener("submit", function (e) {
             addRowToTable(xhttp.response);
 
             // Clear the input fields for another transaction
-            inputPlayerID.value = '';
-            inputCharacterID.value = '';
-            inputGameID = '';
+            inputTournamentID.value = '';
+            inputOrganizerID.value = '';
+            inputPlayerID = '';
             
         }
         else if (xhttp.readyState == 4 && xhttp.status != 200) {
@@ -62,7 +62,7 @@ addPlayerRosterForm.addEventListener("submit", function (e) {
 addRowToTable = (data) => {
 
     // Get a reference to the current table on the page and clear it out.
-    let currentTable = document.getElementById("player-roster-table");
+    let currentTable = document.getElementById("tournament-roster-table");
 
     // Get the location where we should insert the new row (end of table)
     let newRowIndex = currentTable.rows.length;
@@ -74,31 +74,31 @@ addRowToTable = (data) => {
     // Create a row and 4 cells
     let row = document.createElement("TR");
     let idCell = document.createElement("TD");
-    let usernameCell = document.createElement("TD");
-    let characterNameCell = document.createElement("TD");
-    let gameNameCell = document.createElement("TD");
+    let tournamentCell = document.createElement("TD");
+    let organizerCell = document.createElement("TD");
+    let playerCell = document.createElement("TD");
     let deleteCell = document.createElement("TD");
 
     // Fill the cells with correct data
-    idCell.innerText = newRow.character_player_plays_id;
-    usernameCell.innerText = newRow.username;
-    characterNameCell.innerText = newRow.character_name;
-    gameNameCell.innerText = newRow.game_name;
+    idCell.innerText = newRow.tournament_entry_id;
+    tournamentCell.innerText = newRow.tournament_name;
+    organizerCell.innerText = newRow.organizer_name;
+    playerCell.innerText = newRow.username;
     
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";
     deleteCell.onclick = function(){
-        deletePlayerRoster(newRow.character_player_plays_id);
+        deleteTournamentRoster(newRow.tournament_entry_id);
     };
 
     // Add the cells to the row 
     row.appendChild(idCell);
-    row.appendChild(usernameCell);
-    row.appendChild(characterNameCell);
-    row.appendChild(gameNameCell);
+    row.appendChild(tournamentCell);
+    row.appendChild(organizerCell);
+    row.appendChild(playerCell);
     row.appendChild(deleteCell);
     
-    row.setAttribute('data-value', newRow.character_player_plays_id);
+    row.setAttribute('data-value', newRow.tournament_entry_id);
     // Add the row to the table
     currentTable.appendChild(row);
 

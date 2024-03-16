@@ -1,46 +1,75 @@
- <main>
-        <section>
-            
-            <table border = "1">
-                <tr>
-                   
-                    <th> Tournament: </th>
-                    <th> Organizer: </th>
-                    <th> Player: </th>     
-                                        
-                    
-                </tr>
-                <tr>
-                    
-                    <th> Coinbox Online </th>
-                    <th> RSquared </th>
-                    <th> Daigo </th>
-                    
-                    
-                </tr>
-                <tr>
-                    
-                    
-                    <th> WNF 12 </th>
-                    <th> j_smith </th>
-                    <th> Sajam </th>
-                    
-                </tr>
-                <tr>
-                    <th> CEO 2023 </th>
-                    <th> RSquared </th>
-                    <th> jwong </th>
-                    
-                </tr>
+<main>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- index.hbs -->
+<h1>Players in Tournaments</h1>
+<p>Here you can view, add, update, and remove players from tournament rosters</p>
 
-            </table>
+{{!-- Create a table --}}
+<table id = "tournament-roster-table">
 
+{{!-- Header section --}}
+    <thead>
 
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr data-value={{this.tournament_entry_id}}>
+            <td>{{this.tournament_entry_id}}</td>
+            <td>{{this.tournament_name}}</td>
+            <td>{{this.organizer_name}}</td>
+            <td>{{this.username}}</td>
             
-        </section>
-    </main>
-    <footer> 
-        <p>
-            
-        </p>
-    </footer>
+            <td><button onclick="deleteTournamentRoster({{this.tournament_entry_id}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_tournament_roster.js"></script>
+
+{{!-- Form to add a record to the table  --}}
+<h2>Adding Data</h2>
+<p>To add a new tournament roster, please enter the information below and click 'Submit'!</p>
+<form id="add-tournament-roster">
+    <label for="input-tournament">Tournament: </label>
+    <select name="input-tournament" id ="input-tournament-ajax">
+        <option value="">Select a Tournament</option>
+        {{#each tournamentData}}
+        <option value="{{this.tournament_id}}">{{this.tournament_name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-organizer">Organizer: </label>
+    <select name="input-organizer" id ="input-organizer-ajax">
+        <option value="">Select an organizer</option>
+        {{#each organizerData}}
+        <option value="{{this.organizer_id}}">{{this.username}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-player">Player: </label>
+    <select name="input-player" id ="input-player-ajax">
+        <option value="">Select a player</option>
+        {{#each playerData}}
+        <option value="{{this.player_id}}">{{this.username}}</option>
+        {{/each}}
+    </select>
+
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_tournament_roster.js"></script>

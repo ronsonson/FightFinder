@@ -1,13 +1,13 @@
-function deletePlayerRoster(character_player_plays_id) {
+function deleteTournamentRoster(tournament_entry_id) {
     // Put our data we want to send in a javascript object
    
     let data = {
-        character_player_plays_id: character_player_plays_id
+        tournament_entry_id: tournament_entry_id
     };
 
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/delete-player-roster", true);
+    xhttp.open("DELETE", "/delete-tournament-roster", true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
     // Tell our AJAX request how to resolve
@@ -15,7 +15,7 @@ function deletePlayerRoster(character_player_plays_id) {
         if (xhttp.readyState == 4 && xhttp.status == 204) {
 
             // Add the new data to the table
-            deleteRow(character_player_plays_id);
+            deleteRow(tournament_entry_id);
 
         }
         else if (xhttp.readyState == 4 && xhttp.status != 204) {
@@ -27,17 +27,15 @@ function deletePlayerRoster(character_player_plays_id) {
 }
 
 
-function deleteRow(character_player_plays_id){
+function deleteRow(tournament_entry_id){
     
-    let table = document.getElementById("player-roster-table");
+    let table = document.getElementById("tournament-roster-table");
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
-       if (table.rows[i].getAttribute("data-value") == character_player_plays_id) {
+       if (table.rows[i].getAttribute("data-value") == tournament_entry_id) {
             table.deleteRow(i);
             break;
        }
     }
 }
-
-

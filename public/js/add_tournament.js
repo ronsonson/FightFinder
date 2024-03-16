@@ -40,6 +40,7 @@ addTournamentForm.addEventListener("submit", function (e) {
         game_id: gameValue
     }
     
+    console.log(data);
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/add-tournament", true);
@@ -87,7 +88,7 @@ addRowToTable = (data) => {
     // Get a reference to the new row from the database query (last object)
     let parsedData = JSON.parse(data);
     let newRow = parsedData[parsedData.length - 1]
-    console.log(newRow);
+
     // Create a row and 4 cells
     let row = document.createElement("TR");
     let idCell = document.createElement("TD");
@@ -97,6 +98,7 @@ addRowToTable = (data) => {
     let tournamentLocationCell = document.createElement("TD");
     let prizePoolCell = document.createElement("TD");
     let organizerUsernameCell = document.createElement("TD");
+    let gameNameCell = document.createElement("TD");
     let deleteCell = document.createElement("TD");
 
     // Fill the cells with correct data
@@ -106,14 +108,15 @@ addRowToTable = (data) => {
     isOnlineCell.innerText = newRow.is_online;
     tournamentLocationCell.innerText = newRow.location;
     prizePoolCell.innerText = newRow.prize_pool;
-    organizerUsernameCell.innerText = newRow.organizer_id;
+    organizerUsernameCell.innerText = newRow.username;
+    gameNameCell.innerText = newRow.game_name;
     
    
     
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";
     deleteCell.onclick = function(){
-        deleteTournament(newRow.id);
+        deleteTournament(newRow.tournament_id);
     };
 
     // Add the cells to the row 
@@ -124,9 +127,10 @@ addRowToTable = (data) => {
     row.appendChild(tournamentLocationCell);
     row.appendChild(prizePoolCell);
     row.appendChild(organizerUsernameCell);
+    row.appendChild(gameNameCell);
     row.appendChild(deleteCell);
     
-    row.setAttribute('data-value', newRow.id);
+    row.setAttribute('data-value', newRow.tournament_id);
     // Add the row to the table
     currentTable.appendChild(row);
 }

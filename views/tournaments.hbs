@@ -80,7 +80,7 @@
 
     <label for="input-game">Tournament Game: </label>
     <select name="input-game" id ="input-game-ajax">
-        <option value ="">Select an Organizer</option>
+        <option value ="">Select a Game</option>
         {{#each gameData}}
         <option value="{{this.game_id}}">{{this.game_name}}</option>
         {{/each}}
@@ -91,5 +91,54 @@
 
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="./js/add_tournament.js"></script>
+
+{{!-- Form to update a record to the table  --}}
+<h2>Updating Data</h2>
+<p>To update a Tournament, please enter the tournament information below and click 'Submit'!</p>
+<form id="update-tournament">
+    <label for="update-tname">Tournament Name: </label>
+    <select name="update-tname" id ="update-tname-ajax">
+        <option value="">Select a Tournament</option>
+        {{#each data}}
+        <option value="{{this.tournament_id}}">{{this.tournament_name}}</option>
+        {{/each}}
+    </select>
+    
+    <label for="update-tdate">Date of Tournament: </label>
+    <input type="date" name="update-tdate" id="update-tdate">
+
+    <label for="update-is-online">Online Tournament?: </label>
+    <select id="update-is-online" name ="update-is-online">
+        <option value="1" selected>Yes</option>
+        <option value="0">No</option>
+    </select>
+
+    <label for="update-location">Location: </label>
+    <input type="text" name="update-location" id="update-location">
+
+    <label for="update-prize-pool">Prize Pool: </label>
+    <input type="text" name="update-prize-pool" id="update-prize-pool">
+
+    <label for="update-organizer">Tournament Organizer: </label>
+    <select name="update-organizer" id ="update-organizer-ajax">
+        <option value="">Select an Organizer</option>
+        {{#each organizerData}}
+        <option value="{{this.organizer_id}}">{{this.username}}</option>
+        {{/each}}
+    </select>
+
+    <label for="update-game">Tournament Game: </label>
+    <select name="update-game" id ="update-game-ajax">
+        <option value ="">Select a Game</option>
+        {{#each gameData}}
+        <option value="{{this.game_id}}">{{this.game_name}}</option>
+        {{/each}}
+    </select>
+
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/update_tournament.js"></script>
 
 </main>

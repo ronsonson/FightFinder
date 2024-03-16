@@ -414,6 +414,46 @@ app.post('/add-player-roster', function(req, res)
             }
         })});
 
+        app.put('/put-player-roster-ajax', function(req, res, next){
+            let data = req.body;
+    
+            let character_id = data.character_id;
+            let game_id = data.game_id;
+            let player_roster_id = data.character_player_plays_id;
+    
+            let queryUpdatePlayerRoster = `UPDATE Characters_player_plays SET character_id = ?, game_id = ? WHERE character_player_plays_id = ?;`;
+            let selectPlayerRoster = `SELECT 
+                                            character_player_plays_id, 
+                                            username, 
+                                            character_name, 
+                                            game_name 
+                                        FROM Characters_player_plays 
+                                            INNER JOIN Players ON Characters_player_plays.player_id = Players.player_id 
+                                            INNER JOIN Characters ON Characters_player_plays.character_id = Characters.character_id 
+                                            INNER JOIN Games ON Characters_player_plays.game_id = Games.game_id 
+                                        WHERE character_player_plays_id = ?;`;
+    
+            db.pool.query(queryUpdatePlayerRoster, [character_id, game_id, player_roster_id], function(error, rows, fields){
+                // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                if(error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If there was no error, we run our second query and return that data so we can use it to update the people's
+                // table on the front-end
+                else
+                {
+                    db.pool.query(selectPlayerRoster, [player_roster_id], function(error, rows, fields){
+                        if (error) {
+                            console.log(error);
+                            res.sendStatus(400);
+                        } else {
+                            res.send(rows);
+                        }
+                    })
+                }
+            })});
+
 
       app.post('/add-game', function(req, res) 
       {

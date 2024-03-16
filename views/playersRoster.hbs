@@ -42,7 +42,7 @@
 
 {{!-- Form to add a record to the table  --}}
 <h2>Adding Data</h2>
-<p>To add a new player, please enter their information below and click 'Submit'!</p>
+<p>To add a new player roster, please enter their information below and click 'Submit'!</p>
 <form id="add-player-roster">
     <label for="input-player">Player: </label>
     <select name="input-player" id ="input-player-ajax">
@@ -73,4 +73,38 @@
 
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="./js/add_player_roster.js"></script>
+
+<h2>Updating a Player Roster</h2>
+<p></p>
+<form id="update-player-roster">
+
+    <label for="update-player-roster-id">Player Roster ID: </label>
+    <select  name="update-player-roster-id" id="update-player-roster-id">
+        <option value="test">Select a Player Roster</option>
+        {{#each data}}
+        <option value="{{this.character_player_plays_id}}">{{this.character_player_plays_id}}</option>
+        {{/each}}
+    </select>
+
+    <label for="update-character-id">Character: </label>
+    <select  name="update-character-id" id="update-character-id">
+        <option value="test">Select a Character</option>
+        {{#each characterData}}
+        <option value="{{this.character_id}}">{{this.character_name}}</option>
+        {{/each}}
+    </select>
+        
+   <label for="update-game-id">Game: </label>
+    <select name="update-game" id ="update-game-id">
+        <option value="">Select a game</option>
+        {{#each gameData}}
+        <option value="{{this.game_id}}">{{this.game_name}}</option>
+        {{/each}}
+    </select>
+
+    <input type="submit">
+
+</form>
+
+<script src="./js/update_player_roster.js"></script>
 </main>

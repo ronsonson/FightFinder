@@ -54,5 +54,28 @@
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="./js/add_game.js"></script>
 
+<h2>Updating a Game</h2>
+<p></p>
+<form id="update-game">
+
+    <label for="input-gamename">Name of game: </label>
+    <select  name="input-gamename" id="mySelect">
+        <option value="test">Select a Game</option>
+        {{#each data}}
+        <option value="{{this.game_id}}">{{this.game_name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-newgamename">new name </label>
+    <input type="text" name="input-newgamename" id="input-game-update">
+        <option>Input the name of the game</option>
+        
+   
+    <input type="submit">
+
+</form>
+
+<script src="./js/update_game.js"></script>
+
 
 </main>

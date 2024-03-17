@@ -35,7 +35,6 @@ function deleteRow(character_id){
        //rows would be accessed using the "row" variable assigned in the for loop
        if (table.rows[i].getAttribute("data-value") == character_id) {
             table.deleteRow(i);
-            deleteDropDownMenu(character_id);
             break;
        }
     }

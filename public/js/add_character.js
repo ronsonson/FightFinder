@@ -82,7 +82,7 @@ addRowToTable = (data) => {
     idCell.innerText = newRow.character_id;
     characterNameCell.innerText = newRow.character_name;
     characterLegalCell.innerText = newRow.is_legal;
-    characterGameCell.innerText = newRow.character_game;
+    characterGameCell.innerText = newRow.game_name;
     
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";

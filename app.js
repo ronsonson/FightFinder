@@ -557,13 +557,13 @@ app.post('/add-tournament-roster', function(req, res)
         app.put('/put-game-ajax', function(req, res, next){
             let data = req.body;
     
-            let gameName = data.gameName;
+            let game_name = data.game_name;
             let game_id = data.game_id;
     
             let queryUpdateGameName = `UPDATE Games SET game_name = ? WHERE game_id = ?;`;
             let selectGame = `SELECT * FROM Games WHERE game_id = ?;`;
     
-            db.pool.query(queryUpdateGameName, [gameName, game_id], function(error, rows, fields){
+            db.pool.query(queryUpdateGameName, [game_name, game_id], function(error, rows, fields){
                 // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                 if(error){
                     console.log(error);

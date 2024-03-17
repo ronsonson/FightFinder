@@ -27,7 +27,7 @@ updatePlayerForm.addEventListener("submit", function (e) {
         fullname: fullNameValue,
         username: usernameValue,
     }
-    
+    console.log(data);
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
     xhttp.open("PUT", "/put-player-ajax", true);
@@ -36,7 +36,6 @@ updatePlayerForm.addEventListener("submit", function (e) {
     // Tell our AJAX request how to resolve
     xhttp.onreadystatechange = () => {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
-
             // Add the new data to the table
             updateRow(xhttp.response, fullNameValue);
 
@@ -54,8 +53,7 @@ updatePlayerForm.addEventListener("submit", function (e) {
 
 function updateRow(data, player_id){
     let parsedData = JSON.parse(data);
-    
-    let table = document.getElementById("player-table");
+    let table = document.getElementById("players-table");
 
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
@@ -65,7 +63,7 @@ function updateRow(data, player_id){
             // Get the location of the row where we found the matching person ID
             let updateRowIndex = table.getElementsByTagName("tr")[i];
 
-            // Get td of homeworld value
+            // Get td of username value
             let td = updateRowIndex.getElementsByTagName("td")[3];
 
             // Reassign homeworld to our value we updated to

@@ -20,7 +20,7 @@ updateGameForm.addEventListener("submit", function (e) {
     // Put our data we want to send in a javascript object
     let data = {
         game_id: idValue,
-        gameName: gamenameValue,
+        game_name: gamenameValue,
     }
     
     // Setup our AJAX request
@@ -61,10 +61,10 @@ function updateRow(data, gameID){
             let updateRowIndex = table.getElementsByTagName("tr")[i];
 
             // Get td of homeworld value
-            let td = updateRowIndex.getElementsByTagName("td")[3];
+            let td = updateRowIndex.getElementsByTagName("td")[1];
 
             // Reassign homeworld to our value we updated to
-            td.innerHTML = parsedData[0].gameName; 
+            td.innerHTML = parsedData[0].game_name; 
        }
     }
 }
